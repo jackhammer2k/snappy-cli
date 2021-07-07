@@ -14,7 +14,7 @@ import java.io.File
 import java.io.InputStream
 import java.io.OutputStream
 
-class SnappyCli : CliktCommand() {
+class Snappy : CliktCommand() {
     val fileExtension = "snappy"
 
     val decompress by option("-d", "--decompress", help = "decompress").flag(default = false)
@@ -60,5 +60,5 @@ class SnappyCli : CliktCommand() {
 }
 
 fun main(args: Array<String>) {
-    SnappyCli().main(args)
+    Snappy().main(args)
 }

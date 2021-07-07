@@ -22,5 +22,5 @@ dependencies {
 
 nativeBuild {
     // Define the main class for the application.
-    mainClass.set("org.jackhammer2k.snappy.cli.SnappyCliKt")
+    mainClass.set("org.jackhammer2k.snappy.cli.SnappyKt")
 }
