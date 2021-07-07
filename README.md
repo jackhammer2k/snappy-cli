@@ -20,6 +20,13 @@ Just download the binary. You do not need a JVM because the utility has been com
 
     echo "foobar" | snappy | snappy -d 
 
+## Build (Linux)
+
+Download/Install GraalVM.
+
+    gu install native-image
+    JAVA_HOME=$GRAALVM_HOME ./gradlew nativeBuild
+
 ## License
 
 Apache 2.0
