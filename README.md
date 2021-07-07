@@ -18,7 +18,7 @@ Just download the binary. You do not need a JVM because the utility has been com
 
 ## Examples
 
-echo "foobar" | snappy | snappy -d 
+    echo "foobar" | snappy | snappy -d 
 
 ## License
 
