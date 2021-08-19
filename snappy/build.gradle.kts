@@ -18,9 +18,16 @@ dependencies {
 
     implementation("com.github.ajalt:clikt:1.3.0")
     implementation("org.xerial.snappy:snappy-java:1.1.8.4")
+    implementation("org.apache.commons:commons-compress:1.21")
+
+    testImplementation("org.junit.jupiter:junit-jupiter:5.7.2")
 }
 
 nativeBuild {
     // Define the main class for the application.
     mainClass.set("org.jackhammer2k.snappy.cli.SnappyKt")
+}
+
+tasks.withType<Test> {
+    useJUnitPlatform()
 }

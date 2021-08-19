@@ -6,7 +6,7 @@ import com.github.ajalt.clikt.parameters.arguments.optional
 import com.github.ajalt.clikt.parameters.options.flag
 import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.types.file
-import org.xerial.snappy.SnappyFramedInputStream
+import org.apache.commons.compress.compressors.snappy.FramedSnappyCompressorInputStream
 import org.xerial.snappy.SnappyFramedOutputStream
 import org.xerial.snappy.SnappyInputStream
 import org.xerial.snappy.SnappyOutputStream
@@ -31,24 +31,32 @@ class Snappy : CliktCommand() {
         val input = input(file)
         val output = output(file)
 
-        input.use { inputStream -> output.use { outputStream -> inputStream.transferTo(outputStream) } }
+        transfer(input, output)
 
         if (!keep) {
             file?.delete()
         }
     }
 
-    internal fun input(file: File?): InputStream = when {
+    internal fun transfer(input: InputStream, output: OutputStream) {
+        input.use { inputStream -> output.use { outputStream -> inputStream.transferTo(outputStream) } }
+    }
+
+    internal fun input(file: File?): InputStream = input(decompress, nonFramed, file)
+
+    internal fun input(decompress: Boolean, nonFramed: Boolean, file: File?): InputStream = when {
         decompress && nonFramed && file == null -> SnappyInputStream(System.`in`)
-        decompress && !nonFramed && file == null -> SnappyFramedInputStream(System.`in`)
+        decompress && !nonFramed && file == null -> FramedSnappyCompressorInputStream(System.`in`)
         decompress && nonFramed && file != null -> SnappyInputStream(file.inputStream())
-        decompress && !nonFramed && file != null -> SnappyFramedInputStream(file.inputStream())
+        decompress && !nonFramed && file != null -> FramedSnappyCompressorInputStream(file.inputStream())
         !decompress && file != null -> file.inputStream()
         !decompress && file == null -> System.`in`
         else -> throw IllegalStateException("unsupported combination of params/arguments")
     }
 
-    internal fun output(file: File?): OutputStream = when {
+    internal fun output(file: File?): OutputStream = output(decompress, nonFramed, file)
+
+    internal fun output(decompress: Boolean, nonFramed: Boolean, file: File?): OutputStream = when {
         decompress && file != null -> file.resolveSibling(file.nameWithoutExtension).outputStream()
         decompress && file == null -> System.out
         !decompress && nonFramed && file == null -> SnappyOutputStream(System.out)
